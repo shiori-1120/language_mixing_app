@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "911443567546",
+    "project_id": "language-mixing-app",
+    "storage_bucket": "language-mixing-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:911443567546:android:3a2a338174493e25147383",
+        "android_client_info": {
+          "package_name": "com.example.language_mixing_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAiESAQIx2-7LEpuhIrhQAfwtWydL_o200"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
