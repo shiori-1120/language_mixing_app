@@ -1,5 +1,15 @@
 {
   "projects": {
     "default": "language-mixing-app"
-  }
+  },
+  "targets": {
+    "language-mixing-app": {
+      "hosting": {
+        "language-mixing-app-chinese-ver": [
+          "language-mixing-app-chinese-ver"
+        ]
+      }
+    }
+  },
+  "etags": {}
 }

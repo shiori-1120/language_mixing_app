@@ -12,7 +12,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
 );
-  final apiKey = dotenv.env['GEMINI_API_KEY'];
+  final apiKey = dotenv.get('GEMINI_API_KEY');
   if (apiKey == null || apiKey.isEmpty) {
     print('No \$API_KEY environment variable');
     exit(1);

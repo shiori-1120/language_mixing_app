@@ -23,6 +23,7 @@
     }
   },
   "hosting": {
+    "target": "language-mixing-app-chinese-ver", 
     "public": "public",
     "ignore": [
       "firebase.json",

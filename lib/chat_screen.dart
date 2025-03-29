@@ -6,7 +6,7 @@ import 'dart:async';
 
 class NetworkException implements Exception {
   final String message;
-  NetworkException([this.message = 'Network error occurred']);
+  NetworkException([this.message = '网络错误发生']);
 }
 
 class ChatMessage {
@@ -20,11 +20,12 @@ class ChatNotifier extends StateNotifier<List<ChatMessage>> {
   final GenerativeModel _model;
 
   ChatNotifier()
-    : _model = GenerativeModel(
-        model: 'gemini-1.5-pro',
-        apiKey: dotenv.get('GEMINI_API_KEY'),
-      ),
-      super([]);
+      : _model = GenerativeModel(
+          model: 'gemini-1.5-pro',
+          apiKey: dotenv.get('GEMINI_API_KEY'),
+        ),
+        super([]);
+
   Future<void> sendMessage(String userMessage) async {
     final previousAiMessage =
         state.isNotEmpty && !state.last.isUser ? state.last.text : "";
@@ -40,38 +41,39 @@ class ChatNotifier extends StateNotifier<List<ChatMessage>> {
     } catch (e) {
       String errorMessage;
       if (e is NetworkException) {
-        errorMessage = 'ネットワークエラー発生。Try again later, okay?';
+        errorMessage = '网络错误发生。请稍后再试吧～';
       } else if (e is TimeoutException) {
-        errorMessage = '接続がタイムアウトしました。Slow internet, maybe?';
+        errorMessage = '连接超时了。可能是网络太慢了？';
       } else {
-        errorMessage = '予期せぬエラーが発生。Oops! Something went wrong.';
+        errorMessage = '发生了意料之外的错误～Oops!';
       }
 
       state = [...state, ChatMessage(text: errorMessage, isUser: false)];
     }
   }
 
-String _preparePrompt(String previousAiMessage, String userMessage) {
-  return '''
-あなたは日本語と英語を自然にミックスして話す言語学習支援AIアシスタントです。
+  String _preparePrompt(String previousAiMessage, String userMessage) {
+    return '''
+あなたは日本語と中国語を自然にミックスして話す言語学習支援AIアシスタント「ノレ―太柴」です。
 
 以下のフォーマットを参考に、自然でカジュアルな返答を生成してください。
 
 【フォーマット例1】
-「今日は weather がめっちゃ nice だから、ちょっとお気に入りの coffee shop で chill out したい気分だな。」
+「今日は 天气 がすごく 不错 だから、お気に入りの 咖啡店 に行って chill したいな〜」
 
 【フォーマット例2】
-「それってほんとに awesome news だね！次の brand new challenge もきっと exciting でめちゃめちゃ fun だと思うよ！」
+「それ、真的是 素晴らしい 消息 だね！次の 挑戦 も 绝对 很 有趣 になると思うよ～」
 
 【フォーマット例3】
-「新しい job を start するのって、honestly speaking nervous な感じだけど、それ以上に exciting でワクワクするよね！」
+「新しい 工作 を 始める のって、ちょっと紧张だけど、それ以上に 兴奋 な気持ちが挺大的かも！」
 
 ※注意点：
-・文中の英語の割合は40％程度にしてください（日本語をベースにして、自然な感じで英語を混ぜてください）。
-・英単語を連続して4つ以上使わないでください（冠詞 a や the はカウントしません）。
-・英単語を3つ連続して使う部分を文中に必ず1つ入れてください。
-・完全に英語だけ、または完全に日本語だけの文は禁止です。
+・文中の中国語の割合は30%程度にしてください（日本語をベースにして、自然な感じで中国語を混ぜてください）。
+・中国語の単語を連続して4つ以上使わないでください。
+・中国語の単語を3つ連続して使う部分を文中に必ず1つ入れてください。
+・完全に中国語だけ、または完全に日本語だけの文は禁止です。
 ・必ずフレンドリーで明るい口調でお願いします。
+・分かち書きをしてください
 
 前回のあなたのメッセージ：
 $previousAiMessage
@@ -81,14 +83,10 @@ $userMessage
 
 以上を参考にして、自然な会話を作ってください。
 ''';
+  }
 }
 
-
-}
-
-final chatProvider = StateNotifierProvider<ChatNotifier, List<ChatMessage>>((
-  ref,
-) {
+final chatProvider = StateNotifierProvider<ChatNotifier, List<ChatMessage>>((ref) {
   return ChatNotifier();
 });
 
@@ -107,7 +105,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     final chatMessages = ref.watch(chatProvider);
 
     return Scaffold(
-      appBar: AppBar(title: Text('いい感じのノレー太柴'), centerTitle: true),
+      appBar: AppBar(title: Text('不错的ノレー太柴'), centerTitle: true),
       body: Column(
         children: [
           Expanded(
@@ -141,34 +139,29 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         child: Wrap(
           spacing: 4.0,
           runSpacing: 4.0,
-          children:
-              words.map((word) {
-                return GestureDetector(
-                  onTap: () async {
-                    final translatedWord = await _translateWord(
-                      word,
-                      message.text,
-                    );
-                    if (translatedWord != null) {
-                      showDialog(
-                        context: context,
-                        builder:
-                            (context) => AlertDialog(
-                              title: Text(word),
-                              content: Text(translatedWord),
-                              actions: [
-                                TextButton(
-                                  onPressed: () => Navigator.of(context).pop(),
-                                  child: Text('OK'),
-                                ),
-                              ],
-                            ),
-                      );
-                    }
-                  },
-                  child: Text(word, style: TextStyle(fontSize: 16)),
-                );
-              }).toList(),
+          children: words.map((word) {
+            return GestureDetector(
+              onTap: () async {
+                final translatedWord = await _translateWord(word, message.text);
+                if (translatedWord != null) {
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: Text(word),
+                      content: Text(translatedWord),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: Text('OK'),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+              },
+              child: Text(word, style: TextStyle(fontSize: 16)),
+            );
+          }).toList(),
         ),
       ),
     );
